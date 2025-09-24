@@ -32,11 +32,25 @@ async function run() {
     const listCollections = client.db("todo").collection("lists");
 
 
+    app.get('/todo-lists', async(req,res)=>{
+        const email = req.query.email;
+        const result = await listCollections.find({email}).toArray();
+        res.send(result);
+    })
+
+
     app.post('/todo-lists',async(req,res)=>{
         const list = req.body;
         const result = await listCollections.insertOne(list);
         res.send(result);
     })
+
+    app.delete('/todo-lists/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await listCollections.deleteOne(query);
+      res.send(result);
+    });
 
 
 
